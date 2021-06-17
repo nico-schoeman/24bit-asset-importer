@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 #if (UNITY_EDITOR)
-namespace EditorTools.ImportConfigExtensions
+namespace EditorTools.AssetImporter.ImportConfigExtensions
 {
     public static class DirectoryExtensions
     {
@@ -20,7 +20,8 @@ namespace EditorTools.ImportConfigExtensions
         public static string RemoveSystemDirectory(this string path)
         {
             // Check if the path is a full path containing the Assets directory, in that case we remove the data path but keep the Assets Directory
-            if (path.Contains("\\Assets")) return path.Replace(InvertSlash(Application.dataPath), "Assets");
+            if (path.Contains("\\Assets")) 
+                return path.Replace(InvertSlash(Application.dataPath), "Assets");
             // Otherwise if the path is not a Assets path we remove the system path (data path - the assets directory)
             return path.Replace(InvertSlash(Application.dataPath.Replace("/Assets", "")), "");
         }

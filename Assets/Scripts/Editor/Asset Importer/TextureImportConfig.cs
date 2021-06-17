@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 #if (UNITY_EDITOR)
-namespace EditorTools
+namespace EditorTools.AssetImporter
 {
     [CreateAssetMenu(fileName = "TextureImportConfig", menuName = "ImportConfigurations/TextureImportConfig")]
     public class TextureImportConfig : BaseImportConfig

@@ -1,30 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using System.IO;
-using EditorTools.ImportConfigExtensions;
+using EditorTools.AssetImporter.ImportConfigExtensions;
 
 #if (UNITY_EDITOR)
-namespace EditorTools
+namespace EditorTools.AssetImporter
 {
     public class AssetImporter : AssetPostprocessor
     {
         // Keep track of the instance for use in the static menu item action
-        public static AssetImporter instance;
+        private static AssetImporter s_instance;
         public AssetImporter()
         {
-            instance = this;
+            s_instance = this;
         }
 
-        [MenuItem("24Bit Tools/Asset Importer - Reimport select folders #a")] //Hotkey is Shift-A
-        public static void Run()
+        //Hotkey is Shift-A
+        [MenuItem("24Bit Tools/Asset Importer - Reimport select folders #a")]
+        public static void RunPostprocesses()
         {
             List<string> paths = new List<string>();
+
             // Get all the selected assets in the editor (this includes folders)
-            foreach (var item in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+            Object[] selectedAssets = Selection.GetFiltered(typeof(Object), SelectionMode.Assets);
+
+            foreach (Object asset in selectedAssets)
             {
-                string path = AssetDatabase.GetAssetPath(item);
+                string path = AssetDatabase.GetAssetPath(asset);
                 // If it is a file, we get the directory the file is in
                 if (File.Exists(path))
                 {
@@ -35,7 +38,9 @@ namespace EditorTools
             }
 
             // Get all the texture assets guids in the selected paths
-            foreach (var guid in AssetDatabase.FindAssets("t:Texture", paths.ToArray()))
+            string[] textureGuids = AssetDatabase.FindAssets("t:Texture", paths.ToArray());
+
+            foreach (string guid in textureGuids)
             {
                 // Convert guid to path
                 string path = AssetDatabase.GUIDToAssetPath(guid);
@@ -43,12 +48,14 @@ namespace EditorTools
                 // Check that the assets is in one of the paths selected and not in a child directory for example
                 if (paths.Contains(Path.GetDirectoryName(path)))
                 {
-                    instance.DoPostprocessTexture(path);
+                    s_instance.DoPostprocessTexture(path);
                 }
             }
 
             // Get all the audio clips guids in the selected paths
-            foreach (var guid in AssetDatabase.FindAssets("t:AudioClip", paths.ToArray()))
+            string[] audioGuids = AssetDatabase.FindAssets("t:AudioClip", paths.ToArray());
+
+            foreach (string guid in audioGuids)
             {
                 // Convert guid to path
                 string path = AssetDatabase.GUIDToAssetPath(guid);
@@ -56,7 +63,7 @@ namespace EditorTools
                 // Check that the assets is in one of the paths selected and not in a child directory for example
                 if (paths.Contains(Path.GetDirectoryName(path)))
                 {
-                    instance.DoPostprocessAudio(path);
+                    s_instance.DoPostprocessAudio(path);
                 }
             }
         }
@@ -100,11 +107,8 @@ namespace EditorTools
                 //Override settings for android
                 if (config.overrideForAndroid)
                 {
-                    TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings();
                     //platform options: "Webplayer", "Standalone", "iOS", "Android", "WebGL", "PS4", "PSP2", "XBoxOne", "Samsung TV"
-                    platformSettings.name = "Android";
-                    platformSettings.overridden = true;
-                    platformSettings.maxTextureSize = config.maxTextureSize;
+                    TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings() { name = "Android", overridden = true, maxTextureSize = config.maxTextureSize };
 
                     importer.SetPlatformTextureSettings(platformSettings);
                 }
@@ -168,7 +172,7 @@ namespace EditorTools
             // find all the guids of assets of the generic type
             string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new string[] { path });
 
-            foreach (var guid in guids)
+            foreach (string guid in guids)
             {
                 // Convert guid to path
                 string configPath = AssetDatabase.GUIDToAssetPath(guid);

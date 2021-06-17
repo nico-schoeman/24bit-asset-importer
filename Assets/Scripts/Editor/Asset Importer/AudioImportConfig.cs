@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 #if (UNITY_EDITOR)
-namespace EditorTools
+namespace EditorTools.AssetImporter
 {
     [CreateAssetMenu(fileName = "AudioImportConfig", menuName = "ImportConfigurations/AudioImportConfig")]
     public class AudioImportConfig : BaseImportConfig
