@@ -1,0 +1,1 @@
+Textures placed in this folder will use the MainTextureImportConfig file in the parent directory

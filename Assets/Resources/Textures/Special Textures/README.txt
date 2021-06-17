@@ -1,0 +1,1 @@
+Textures placed in this folder will use the SpecialTextureImportConfig file

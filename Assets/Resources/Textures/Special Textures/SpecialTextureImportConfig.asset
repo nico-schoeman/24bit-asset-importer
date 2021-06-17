@@ -10,5 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1cf9ab4ed401d4b4a811e5c6ca9334db, type: 3}
-  m_Name: TextureImportConfiguration
+  m_Name: SpecialTextureImportConfig
   m_EditorClassIdentifier: 
+  anisotropicLevel: 0
+  maxTextureSize: 256
+  overrideForAndroid: 1

@@ -1,0 +1,1 @@
+Textures and Audio clips placed in this folder will use the MainTextureImportConfig and MainAudioImportConfig files respectively
