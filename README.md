@@ -19,13 +19,16 @@ Create a configurable Unity Editor Tool that can change the import settings of a
 ## How to
 
 Assets will automatically be imported with the closest-non-child config file.
-
+<br />
 To Create a config file Right-click for the create menu and select one of the config file options.
+<br />
 ![CreateMenu](Images/CreateMenu.png)
-
+<br />
 Once the config file has been setup it will automatically be used.
 If you want to manually trigger a settings reimport, you can click on a folder or any asset in a folder and either click the reimport option in the tool bar or use the hotkey Shift+A.
+<br />
 ![ToolBarMenu](Images/ToolBarMenu.png)
-
+<br />
 You can also select multiple folders to reimport all of them. Additionally you can right click on a asset or folder in your selection and reimport via the context menu.
+<br />
 ![RightClickMenu](Images/RightClickMenu.png)
