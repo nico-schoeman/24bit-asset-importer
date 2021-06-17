@@ -7,15 +7,118 @@ using ImportConfigExtensions;
 
 public class AssetImporter : AssetPostprocessor
 {
+    // Keep track of the instance for use in the static menu item action
+    public static AssetImporter instance;
+    public AssetImporter()
+    {
+        instance = this;
+    }
+
+    [MenuItem("24Bit Tools/Asset Importer - Reimport select folders #a")] //Hotkey is Shift-A
+    public static void Run ()
+    {
+        List<string> paths = new List<string>();
+        foreach (var item in Selection.GetFiltered(typeof(UnityEngine.Object), SelectionMode.Assets))
+        {
+            string path = AssetDatabase.GetAssetPath(item);
+            if (File.Exists(path))
+            {
+                path = Path.GetDirectoryName(path);
+            }
+
+            paths.Add(path);
+        }
+
+        foreach (var guid in AssetDatabase.FindAssets("t:Texture", paths.ToArray()))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+
+            if (paths.Contains(Path.GetDirectoryName(path)))
+            {
+                instance.DoPostprocessTexture(path);
+            }
+        }
+
+        foreach (var guid in AssetDatabase.FindAssets("t:AudioClip", paths.ToArray()))
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+
+            if (paths.Contains(Path.GetDirectoryName(path)))
+            {
+                instance.DoPostprocessAudio(path);
+            }
+        }
+    }
+
     void OnPostprocessTexture (Texture texture)
     {
-        string path = Directory.GetParent(assetPath).FullName.RemoveSystemDirectory();
-        TextureImportConfiguration config = GetConfigRecursive<TextureImportConfiguration>(path);
-        
+        DoPostprocessTexture(assetPath);
+    }
+
+    void OnPostprocessAudio (AudioClip audio)
+    {
+        DoPostprocessAudio(assetPath);
+    }
+
+    private void DoPostprocessTexture (string path)
+    {
+        string directory = Directory.GetParent(path).FullName.RemoveSystemDirectory();
+
+        TextureImportConfig config = GetConfigRecursive<TextureImportConfig>(directory);
+
         if (config != null)
         {
-            Debug.Log("We have a config");
+            TextureImporter importer = assetImporter as TextureImporter;
+
+            if (importer == null)
+                importer = TextureImporter.GetAtPath(path) as TextureImporter;
+
+            importer.anisoLevel = config.anisotropicLevel;
+            importer.maxTextureSize = config.maxTextureSize;
+
+            if (config.overrideForAndroid)
+            {
+                TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings();
+                //platform options: "Webplayer", "Standalone", "iOS", "Android", "WebGL", "PS4", "PSP2", "XBoxOne", "Samsung TV"
+                platformSettings.name = "Android";
+                platformSettings.overridden = true;
+                platformSettings.maxTextureSize = config.maxTextureSize;
+
+                importer.SetPlatformTextureSettings(platformSettings);
+            }
         }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+    }
+
+    private void DoPostprocessAudio (string path)
+    {
+        string directory = Directory.GetParent(path).FullName.RemoveSystemDirectory();
+
+        AudioImportConfig config = GetConfigRecursive<AudioImportConfig>(directory);
+
+        if (config != null)
+        {
+            AudioImporter importer = assetImporter as AudioImporter;
+
+            if (importer == null)
+                importer = AudioImporter.GetAtPath(path) as AudioImporter;
+
+            AudioImporterSampleSettings settings = importer.defaultSampleSettings;
+            settings.loadType = config.loadType;
+            settings.compressionFormat = config.compressionFormat;
+            settings.sampleRateSetting = config.sampleRateSetting;
+
+            importer.defaultSampleSettings = settings;
+
+            if (config.overrideForAndroid)
+            {
+                //platform options: "Webplayer", "Standalone", "iOS", "Android", "WebGL", "PS4", "PSP2", "XBoxOne", "Samsung TV"
+                importer.SetOverrideSampleSettings("Android", settings);
+            }
+        }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
     /// <summary>
