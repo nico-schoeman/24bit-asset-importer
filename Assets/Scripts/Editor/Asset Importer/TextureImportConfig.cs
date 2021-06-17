@@ -2,16 +2,25 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "TextureImportConfig", menuName = "ImportConfigurations/TextureImportConfig")]
-public class TextureImportConfig : BaseImportConfig
+#if (UNITY_EDITOR)
+namespace EditorTools
 {
-    [Tooltip("Set the anisotropic level for imported textures to use")]
-    [Range(0, 16)]
-    [SerializeField]
-    public int anisotropicLevel = 1;
+    [CreateAssetMenu(fileName = "TextureImportConfig", menuName = "ImportConfigurations/TextureImportConfig")]
+    public class TextureImportConfig : BaseImportConfig
+    {
+        [Tooltip("Set the anisotropic level for imported textures to use")]
+        [Range(0, 16)]
+        [SerializeField]
+        public int anisotropicLevel = 1;
 
-    [SelectOption(new object[] { 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 })]
-    public int maxTextureSize = 2048;
+        [Tooltip("Set the max texture size for imported textures to use")]
+        [SelectOption(new object[] { 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192 })]
+        [SerializeField]
+        public int maxTextureSize = 2048;
 
-    public bool overrideForAndroid = false;
+        [Tooltip("Enable if the texture settings should be overriden for Android")]
+        [SerializeField]
+        public bool overrideForAndroid = false;
+    }
 }
+#endif
