@@ -19,7 +19,7 @@ namespace EditorTools.AssetImporter.ImportConfigExtensions
         /// <returns>The modified path</returns>
         public static string InvertSlashWindows(this string path)
         {
-            // invert the slashes from "/" to "\" since windows likes "\" and unity likes "/" because it uses URI paths
+            // Invert the slashes from "/" to "\" since windows likes "\" and unity likes "/" because it uses URI paths
             return path.Replace('/', '\\');
         }
 
@@ -30,7 +30,7 @@ namespace EditorTools.AssetImporter.ImportConfigExtensions
         /// <returns>The modified path</returns>
         public static string InvertSlashURI(this string path)
         {
-            // invert the slashes from "\" to "/" since windows likes "\" and unity likes "/" because it uses URI paths
+            // Invert the slashes from "\" to "/" since windows likes "\" and unity likes "/" because it uses URI paths
             return path.Replace('\\', '/');
         }
 

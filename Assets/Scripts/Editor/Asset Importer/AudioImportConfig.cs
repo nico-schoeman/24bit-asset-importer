@@ -15,68 +15,24 @@ namespace EditorTools.AssetImporter
     public class AudioImportConfig : BaseImportConfig
     {
         /// <summary>
-        /// Audio Clip Load Type
-        /// </summary>
-        [Tooltip("Set the Load Type for imported AudioClips to use")]
-        [SerializeField]
-        private AudioClipLoadType loadType;
-
-        /// <summary>
-        /// Audio Compression Format
-        /// </summary>
-        [Tooltip("Set the Compression Format for imported AudioClips to use")]
-        [SerializeField]
-        private AudioCompressionFormat compressionFormat;
-
-        /// <summary>
-        /// Audio Sample Rate Setting
-        /// </summary>
-        [Tooltip("Set the Sample Rate for imported AudioClips to use")]
-        [SerializeField]
-        private AudioSampleRateSetting sampleRateSetting;
-
-        /// <summary>
-        /// Override Android check
-        /// </summary>
-        [Tooltip("Enable if the Audio import settings should overriden for Android")]
-        [SerializeField]
-        private bool overrideForAndroid = false;
-
-        /// <summary>
         /// Gets or sets load type
         /// </summary>
-        public AudioClipLoadType LoadType
-        {
-            get { return this.loadType; }
-            set { this.loadType = value; }
-        }
+        public AudioClipLoadType LoadType { get; set; }
 
         /// <summary>
         /// Gets or sets compression format
         /// </summary>
-        public AudioCompressionFormat CompressionFormat
-        {
-            get { return this.compressionFormat; }
-            set { this.compressionFormat = value; }
-        }
+        public AudioCompressionFormat CompressionFormat { get; set; }
 
         /// <summary>
         /// Gets or sets sample rate
         /// </summary>
-        public AudioSampleRateSetting SampleRateSetting
-        {
-            get { return this.sampleRateSetting; }
-            set { this.sampleRateSetting = value; }
-        }
+        public AudioSampleRateSetting SampleRateSetting { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the Android platform should be override
         /// </summary>
-        public bool OverrideForAndroid
-        {
-            get { return this.overrideForAndroid; }
-            set { this.overrideForAndroid = value; }
-        }
+        public bool OverrideForAndroid { get; set; } = false;
     }
 }
 #endif

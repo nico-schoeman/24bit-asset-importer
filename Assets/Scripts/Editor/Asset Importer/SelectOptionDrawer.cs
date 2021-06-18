@@ -23,24 +23,24 @@ namespace EditorTools.AssetImporter
         /// <param name="label">GUI label for the property</param>
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
         {
-            // get the attribute
+            // Get the attribute
             SelectOptionAttribute selectOptions = attribute as SelectOptionAttribute;
 
             // Display the popup with the options defined in the attribute
             int index = System.Array.IndexOf(selectOptions.Options, property.intValue);
 
-            string[] options = selectOptions.Options.Select(option => { return option.ToString(); }).ToArray();
+            string[] options = selectOptions.Options.Select(option => option.ToString()).ToArray();
 
             index = EditorGUI.Popup(position, index, options);
 
-            // set the property int value. since this is only used for ints in this case
+            // Set the property int value. since this is only used for ints in this case
             if (property.propertyType == SerializedPropertyType.Integer)
             {
                 property.intValue = (int)selectOptions.Options[index];
             }
             else
             {
-                // throw a exception if its not a implemented property type
+                // Throw a exception if its not a implemented property type
                 throw new System.NotImplementedException();
             }
         }

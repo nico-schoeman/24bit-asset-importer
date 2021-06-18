@@ -5,7 +5,6 @@
 #if (UNITY_EDITOR)
 namespace EditorTools.AssetImporter
 {
-    using System.Linq;
     using UnityEditor;
     using UnityEngine;
 
