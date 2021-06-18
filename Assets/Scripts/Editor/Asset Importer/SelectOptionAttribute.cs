@@ -13,11 +13,6 @@ namespace EditorTools.AssetImporter
     public class SelectOptionAttribute : PropertyAttribute
     {
         /// <summary>
-        /// Options array field
-        /// </summary>
-        private object[] options;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="SelectOptionAttribute" /> class.
         /// </summary>
         /// <param name="options">The options to use by the property drawer</param>
@@ -29,7 +24,7 @@ namespace EditorTools.AssetImporter
         /// <summary>
         /// Gets or sets the options for this attribute
         /// </summary>
-        public object[] Options { get => this.options; set => this.options = value; }
+        public object[] Options { get; set; }
     }
 }
 #endif

@@ -5,9 +5,9 @@
 #if (UNITY_EDITOR)
 namespace EditorTools.AssetImporter
 {
+    using EditorTools.AssetImporter.ImportConfigExtensions;
     using System.Collections.Generic;
     using System.IO;
-    using EditorTools.AssetImporter.ImportConfigExtensions;
     using UnityEditor;
     using UnityEngine;
 
@@ -19,14 +19,14 @@ namespace EditorTools.AssetImporter
         /// <summary>
         /// Keep track of the instance for use in the static menu item action.
         /// </summary>
-        private static AssetImporter instance;
+        private static AssetImporter s_instance;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssetImporter" /> class.
         /// </summary>
         public AssetImporter()
         {
-            instance = this;
+            s_instance = this;
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace EditorTools.AssetImporter
                 // Check that the assets is in one of the paths selected and not in a child directory for example
                 if (paths.Contains(Path.GetDirectoryName(path)))
                 {
-                    instance.DoPostprocessTexture(path);
+                    s_instance.DoPostprocessTexture(path);
                 }
             }
 
@@ -81,7 +81,7 @@ namespace EditorTools.AssetImporter
                 // Check that the assets is in one of the paths selected and not in a child directory for example
                 if (paths.Contains(Path.GetDirectoryName(path)))
                 {
-                    instance.DoPostprocessAudio(path);
+                    s_instance.DoPostprocessAudio(path);
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace EditorTools.AssetImporter
         /// Event hook for texture imports
         /// </summary>
         /// <param name="texture">the Texture for this event</param>
-        private void OnPostprocessTexture(Texture texture)
+        private void OnPostprocessTexture(UnityEngine.Texture2D texture)
         {
             this.DoPostprocessTexture(this.assetPath);
         }
@@ -110,10 +110,10 @@ namespace EditorTools.AssetImporter
         /// <param name="path">path to the texture asset</param>
         private void DoPostprocessTexture(string path)
         {
-            // get a path with the system path removed
+            // Get a path with the system path removed
             string directory = Directory.GetParent(path).FullName.RemoveSystemDirectory();
 
-            // recursively get the nearest config
+            // Recursively get the nearest config
             TextureImportConfig config = this.GetConfigRecursive<TextureImportConfig>(directory);
 
             if (config != null)
@@ -184,7 +184,7 @@ namespace EditorTools.AssetImporter
                 // Override settings for android
                 if (config.OverrideForAndroid)
                 {
-                    // platform options: "Webplayer", "Standalone", "iOS", "Android", "WebGL", "PS4", "PSP2", "XBoxOne", "Samsung TV"
+                    // Platform options: "Webplayer", "Standalone", "iOS", "Android", "WebGL", "PS4", "PSP2", "XBoxOne", "Samsung TV"
                     importer.SetOverrideSampleSettings("Android", settings);
                 }
                 else
@@ -213,7 +213,7 @@ namespace EditorTools.AssetImporter
                 return null;
             }
 
-            // find all the guids of assets of the generic type
+            // Find all the guids of assets of the generic type
             string[] guids = AssetDatabase.FindAssets($"t:{typeof(T).Name}", new string[] { path });
 
             foreach (string guid in guids)
